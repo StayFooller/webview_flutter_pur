@@ -1,0 +1,6 @@
+framework module webflutter {
+  umbrella header "webflutter.h"
+
+  export *
+  module * { export * }
+}
