@@ -168,33 +168,8 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
       Log.v(TAG, "openFileChooser Android >= 5.0");
       uploadMessageAboveL = filePathCallback;
-      //添加储存权限
-//      verifyStoragePermissions(WebViewFlutterPlugin.activity);
       choosePicture(fileChooserParams);
       return true;
-    }
-  }
-
-  /**
-   * 判断是否开启存储权限
-   *
-   * @param activity
-   */
-  private void verifyStoragePermissions(Activity activity) {
-    try {
-      //检测是否有写的权限
-      boolean permission = ActivityCompat.checkSelfPermission(activity,
-              PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED;
-      boolean permission1 = ActivityCompat.checkSelfPermission(activity,
-              PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED;
-      boolean permission2 = ActivityCompat.checkSelfPermission(activity,
-              PERMISSIONS[2]) != PackageManager.PERMISSION_GRANTED;
-      if (permission ||permission1||permission2) {
-        // 没有权限，去申请权限，会弹出对话框
-        ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
