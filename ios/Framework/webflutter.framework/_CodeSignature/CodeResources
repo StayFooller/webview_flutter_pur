@@ -18,19 +18,11 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		9ndq/iOAKIgnCuxKKvddjogxk60=
+		e5X0vAXdjPhyjfiyyxyp8bCtbrI=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
 		lO67oOPBtx5aUdQddxF/FnaE4Ow=
-		</data>
-		<key>PrivateHeaders/FLTWKNavigationDelegate.m</key>
-		<data>
-		I/vXAbcO932kbpWT2QQq8rqLvnU=
-		</data>
-		<key>PrivateHeaders/MethodBridge.m</key>
-		<data>
-		vKBR3yY2T1xgV1fFlDQ9SftFuwE=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -77,28 +69,6 @@
 			<key>hash2</key>
 			<data>
 			5Bzp59AozgM/nRs/rkUua/h1YyukiDrDeYTpXTe9SdI=
-			</data>
-		</dict>
-		<key>PrivateHeaders/FLTWKNavigationDelegate.m</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			I/vXAbcO932kbpWT2QQq8rqLvnU=
-			</data>
-			<key>hash2</key>
-			<data>
-			AIe8pUrEPjlSyCR1HN+ejrRlTDCFmMCBt6YJP43MlzM=
-			</data>
-		</dict>
-		<key>PrivateHeaders/MethodBridge.m</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			vKBR3yY2T1xgV1fFlDQ9SftFuwE=
-			</data>
-			<key>hash2</key>
-			<data>
-			q/9zxmsJuH4bXHGtpInsmtiJllxnDlTLBtVsFLSt9Sk=
 			</data>
 		</dict>
 	</dict>
