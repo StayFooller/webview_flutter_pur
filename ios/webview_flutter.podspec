@@ -19,8 +19,6 @@ Downloaded by pub (not CocoaPods).
   s.dependency 'Flutter'
 
   s.dependency 'dsBridge'
-  s.vendored_frameworks = 'webflutter.framework'
-  s.resource = 'Framework/*'
   s.platform = :ios, '8.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
 
