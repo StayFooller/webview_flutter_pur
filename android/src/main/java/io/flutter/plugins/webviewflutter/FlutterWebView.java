@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -734,9 +735,18 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     return false;
   }
   private File createCapturedFile(String prefix, String suffix) throws IOException {
+    File file;
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     String imageFileName = prefix + "_" + timeStamp;
-    File storageDir = context.getExternalFilesDir(null);
-    return File.createTempFile(imageFileName, suffix, storageDir);
+    if (Build.VERSION.SDK_INT >= 30){
+      File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "lifeStore");
+      if (!imageStorageDir.exists()) {
+        imageStorageDir.mkdirs();
+      }
+      file = new File(imageStorageDir + File.separator+imageFileName+suffix);
+    }else {
+      file = File.createTempFile(imageFileName, suffix, context.getExternalFilesDir(null));
+    }
+    return file;
   }
 }
