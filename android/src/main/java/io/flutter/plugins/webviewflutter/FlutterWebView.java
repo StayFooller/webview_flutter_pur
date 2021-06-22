@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.webviewflutter;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
@@ -30,8 +31,10 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,15 +73,17 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
 
   private ValueCallback<Uri> uploadMessage;
   private ValueCallback<Uri[]> uploadMessageAboveL;
+  private WebChromeClient.FileChooserParams fileChooserParams;
 //  private Uri imageUri;
   private final static int FILE_CHOOSER_RESULT_CODE = 10000;
   public static final int RESULT_OK = -1;
   private Uri fileUri;
   private Uri videoUri;
   private String[] PERMISSIONS = new String[]{
-          "android.permission.CAMERA",
-          "android.permission.READ_EXTERNAL_STORAGE",
-          "android.permission.WRITE_EXTERNAL_STORAGE",};
+          Manifest.permission.CAMERA,
+          Manifest.permission.READ_EXTERNAL_STORAGE,
+          Manifest.permission.WRITE_EXTERNAL_STORAGE};
+  private final static int REQUEST_PERMISSIONS_CODE=1008;
 
   //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
   private float x1 = 0;
@@ -169,9 +174,41 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
       Log.v(TAG, "openFileChooser Android >= 5.0");
       uploadMessageAboveL = filePathCallback;
-      choosePicture(fileChooserParams);
+      FlutterWebView.this.fileChooserParams=fileChooserParams;
+      requestPermission(fileChooserParams);
       return true;
     }
+  }
+
+
+  /**
+   * 请求权限
+   */
+  private void requestPermission(WebChromeClient.FileChooserParams fileChooserParams) {
+    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+      if (!checkPermission()){
+        //先判断有没有权限 ，没有就在这里进行权限的申请
+        WebViewFlutterPlugin.activity.requestPermissions(PERMISSIONS,REQUEST_PERMISSIONS_CODE);
+      }else {
+        //说明已经获取到权限了
+        choosePicture(fileChooserParams);
+      }
+    }else {
+      choosePicture(fileChooserParams);
+    }
+  }
+
+  /**
+   * 判断是否开启存储权限
+   */
+  private boolean checkPermission(){
+    for (String permission:PERMISSIONS){
+        if (ContextCompat.checkSelfPermission(WebViewFlutterPlugin.activity,
+                permission)!= PackageManager.PERMISSION_GRANTED){
+          return false;
+        }
+    }
+    return true;
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -636,6 +673,30 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       return result;
     }
     return null;
+  }
+
+  public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    if (requestCode==REQUEST_PERMISSIONS_CODE){//请求权限结果
+      boolean isAllGranted = true;
+      for (int i=0;i<grantResults.length;i++) {
+        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+          if (grantResults[i]==PackageManager.PERMISSION_DENIED){
+            ToastUtils.showShort("您已拒绝开启相机/读写存储权限，请前往设置》应用管理》权限管理开启");
+          }
+          isAllGranted = false;
+          break;
+        }
+      }
+      // 所有的权限都授予了
+      if (isAllGranted&&fileChooserParams!=null){
+        choosePicture(fileChooserParams);
+      }else {
+        uploadMessageAboveL.onReceiveValue(null);
+        uploadMessageAboveL=null;
+      }
+      return false;
+    }
+    return false;
   }
 
   public boolean activityResult(int requestCode, int resultCode, Intent data) {

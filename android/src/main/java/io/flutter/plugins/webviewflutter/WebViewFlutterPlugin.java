@@ -26,7 +26,7 @@ import io.flutter.plugin.common.PluginRegistry;
  * <p>Call {@link #registerWith(Registrar)} to use the stable {@code io.flutter.plugin.common}
  * package instead.
  */
-public class WebViewFlutterPlugin implements FlutterPlugin, PluginRegistry.ActivityResultListener, ActivityAware {
+public class WebViewFlutterPlugin implements FlutterPlugin, PluginRegistry.ActivityResultListener, ActivityAware, PluginRegistry.RequestPermissionsResultListener {
   private static final String TAG = "WebViewFlutterPlugin";
 
   private FlutterCookieManager flutterCookieManager;
@@ -45,7 +45,8 @@ public class WebViewFlutterPlugin implements FlutterPlugin, PluginRegistry.Activ
    * <p>Registration should eventually be handled automatically by v2 of the
    * GeneratedPluginRegistrant. https://github.com/flutter/flutter/issues/42694
    */
-  public WebViewFlutterPlugin() {}
+  public WebViewFlutterPlugin() {
+  }
 
   /**
    * Registers a plugin implementation that uses the stable {@code io.flutter.plugin.common}
@@ -98,6 +99,7 @@ public class WebViewFlutterPlugin implements FlutterPlugin, PluginRegistry.Activ
     Log.v(TAG,"onAttachedToActivity");
     activity = binding.getActivity();
     binding.addActivityResultListener(this);
+    binding.addRequestPermissionsResultListener(this);
   }
 
   @Override
@@ -125,4 +127,12 @@ public class WebViewFlutterPlugin implements FlutterPlugin, PluginRegistry.Activ
   }
 
 
+  @Override
+  public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    Log.v(TAG,"onRequestPermissionsResult");
+    if (factory != null && factory.getFlutterWebView() != null){
+      return factory.getFlutterWebView().onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+    return false;
+  }
 }
