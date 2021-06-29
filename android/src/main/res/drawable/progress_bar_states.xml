@@ -26,8 +26,7 @@
 <!--    </item>-->
     <!-- 设置进度条颜色（蓝色） -->
     <item android:id="@android:id/progress">
-        <clip
-            android:gravity="right">
+        <clip>
             <shape>
                 <gradient
                     android:angle="270"
